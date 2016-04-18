@@ -4,8 +4,7 @@
 var builder= require('botbuilder');
 var restify= require('restify');
 var botgrammar= require('./grammar.js');
-//var modelUrl= process.env.model || "https://api.projectoxford.ai/luis/v1/application?id=4353de07-dd40-42b3-8265-ac2ca6529182&subscription-key=a78bb95eb8834bb4946b071b4008fd78&q=";
-var modelUrl= process.env.model ||   "https://api.projectoxford.ai/luis/v1/application?id=487a86b7-941c-428b-9986-d644558e45ae&subscription-key=69861c002a634b548b882a160e07efff&q=";
+var modelUrl= process.env.model || "https://api.projectoxford.ai/luis/v1/application?id=487a86b7-941c-428b-9986-d644558e45ae&subscription-key=69861c002a634b548b882a160e07efff&q=";
 //load LUIS model
 var dialog = new builder.LuisDialog(modelUrl);
 // Create bot and add dialogs
@@ -25,12 +24,14 @@ dialog.on('Intro', function (session, args, next) {
     var botid=builder.EntityRecognizer.findEntity(args.entities, 'SICBOT');
     if(botid != null) {
         session.dialogData.username= null;
-    }
-
-    if(session.dialogData.username == null) {
         var response = botgrammar.messages.WELCOME_MSG + " . " + botgrammar.messages.HOTEL_ID;
         session.send(response);
     }
+
+   /* if(session.dialogData.username == null) {
+        var response = botgrammar.messages.WELCOME_MSG + " . " + botgrammar.messages.HOTEL_ID;
+        session.send(response);
+    }*/
     else
     {
         var response= botgrammar.messages.WELCOME_BACK_MSG.replace('{1}', session.dialogData.username);

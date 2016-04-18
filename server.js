@@ -11,13 +11,20 @@ var dialog = new builder.LuisDialog(modelUrl);
 var sicbot = new builder.BotConnectorBot({ appId: 'YourAppId', appSecret: 'YourAppSecret' });
 
 /*sicbot.add('/', function(session){
-    session.send("hello");
-});*/
+ session.send("hello");
+ });*/
 
 sicbot.add('/', dialog);
 //process LUIS intents
 
 dialog.on('Intro', function (session, args, next) {
+
+
+
+    var botid=builder.EntityRecognizer.findEntity(args.entities, 'SICBOT');
+    if(botid != null) {
+        session.dialogData.username= null;
+    }
 
     if(session.dialogData.username == null) {
         var response = botgrammar.messages.WELCOME_MSG + " . " + botgrammar.messages.HOTEL_ID;
@@ -71,18 +78,18 @@ dialog.on('GetTourDetails', function(session, args, next) {
     if (tour.entity.toString().toLowerCase().indexOf("honey") > -1) {
         session.dialogData.tour = "HONEYMOONERS";
 
-    response = botgrammar.tours.HONEYMOONERS;
-}
+        response = botgrammar.tours.HONEYMOONERS;
+    }
 
     session.send(response);
 })
 
 dialog.on("BookTour",
     function(session, args, next){
-    var tour= session.dialogData.tour;
-    session.send(botgrammar.messages.BOOK_TOUR);
-}
-    )
+        var tour= session.dialogData.tour;
+        session.send(botgrammar.messages.BOOK_TOUR);
+    }
+)
 
 
 dialog.on('CompleteBooking', function(session, results){
